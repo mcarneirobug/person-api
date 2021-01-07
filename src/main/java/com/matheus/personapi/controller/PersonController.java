@@ -2,6 +2,7 @@ package com.matheus.personapi.controller;
 
 import com.matheus.personapi.dto.MessageResponseDTO;
 import com.matheus.personapi.dto.request.PersonDTO;
+import com.matheus.personapi.exception.PersonNotFoundException;
 import com.matheus.personapi.service.PersonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,11 @@ public class PersonController {
     @ResponseStatus(HttpStatus.OK)
     public List<PersonDTO> findAll() {
         return this.service.listAll();
+    }
+
+    @GetMapping("/{id}")
+    public PersonDTO findById(@PathVariable("id") Long id) throws PersonNotFoundException {
+        return this.service.findById(id);
     }
 
 }

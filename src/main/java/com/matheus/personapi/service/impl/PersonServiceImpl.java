@@ -2,12 +2,14 @@ package com.matheus.personapi.service.impl;
 
 import com.matheus.personapi.dto.MessageResponseDTO;
 import com.matheus.personapi.dto.request.PersonDTO;
+import com.matheus.personapi.exception.PersonNotFoundException;
 import com.matheus.personapi.mapper.PersonMapper;
 import com.matheus.personapi.repository.PersonRepository;
 import com.matheus.personapi.service.PersonService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,5 +48,12 @@ public class PersonServiceImpl implements PersonService {
                 .stream()
                 .map(personMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public PersonDTO findById(Long id) throws PersonNotFoundException {
+        return this.repository.findById(id)
+                .map(personMapper::toDTO)
+                .orElseThrow(() -> new PersonNotFoundException(id));
     }
 }
