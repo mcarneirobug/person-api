@@ -2,6 +2,7 @@ package com.matheus.personapi.service.impl;
 
 import com.matheus.personapi.dto.MessageResponseDTO;
 import com.matheus.personapi.dto.request.PersonDTO;
+import com.matheus.personapi.entity.Person;
 import com.matheus.personapi.exception.PersonNotFoundException;
 import com.matheus.personapi.mapper.PersonMapper;
 import com.matheus.personapi.repository.PersonRepository;
@@ -9,7 +10,6 @@ import com.matheus.personapi.service.PersonService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,8 +52,19 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonDTO findById(Long id) throws PersonNotFoundException {
+        final var person = verifyIfExists(id);
+        return personMapper.toDTO(person);
+    }
+
+    @Override
+    public void deleteById(Long id) throws PersonNotFoundException {
+        verifyIfExists(id);
+        this.repository.deleteById(id);
+    }
+
+    private Person verifyIfExists(Long id) throws PersonNotFoundException {
         return this.repository.findById(id)
-                .map(personMapper::toDTO)
                 .orElseThrow(() -> new PersonNotFoundException(id));
     }
+
 }
