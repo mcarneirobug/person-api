@@ -17,4 +17,6 @@ public interface PersonService {
 
     void deleteById(Long id) throws PersonNotFoundException;
 
+    MessageResponseDTO updateById(Long id, PersonDTO personDTO) throws PersonNotFoundException;
+
 }

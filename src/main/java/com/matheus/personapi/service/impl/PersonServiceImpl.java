@@ -36,10 +36,7 @@ public class PersonServiceImpl implements PersonService {
 
         final var savedPerson = this.repository.save(savedToSave);
 
-        return MessageResponseDTO
-                .builder()
-                .message("Created person with ID " + savedPerson.getId())
-                .build();
+        return createMessageResponse(savedPerson.getId(), "Created person with ID ");
     }
 
     @Override
@@ -62,9 +59,27 @@ public class PersonServiceImpl implements PersonService {
         this.repository.deleteById(id);
     }
 
+    @Override
+    public MessageResponseDTO updateById(Long id, PersonDTO personDTO) throws PersonNotFoundException {
+        verifyIfExists(id);
+
+        final var personToUpdate = personMapper.toModel(personDTO);
+
+        final var updatedPerson = this.repository.save(personToUpdate);
+
+        return createMessageResponse(updatedPerson.getId(), "Updated person with ID ");
+    }
+
     private Person verifyIfExists(Long id) throws PersonNotFoundException {
         return this.repository.findById(id)
                 .orElseThrow(() -> new PersonNotFoundException(id));
+    }
+
+    private MessageResponseDTO createMessageResponse(Long id, String message) {
+        return MessageResponseDTO
+                .builder()
+                .message(message + id)
+                .build();
     }
 
 }
