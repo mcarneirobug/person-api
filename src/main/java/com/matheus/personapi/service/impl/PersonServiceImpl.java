@@ -1,7 +1,8 @@
 package com.matheus.personapi.service.impl;
 
 import com.matheus.personapi.dto.MessageResponseDTO;
-import com.matheus.personapi.entity.Person;
+import com.matheus.personapi.dto.request.PersonDTO;
+import com.matheus.personapi.mapper.PersonMapper;
 import com.matheus.personapi.repository.PersonRepository;
 import com.matheus.personapi.service.PersonService;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository repository;
+
+    private final PersonMapper personMapper = PersonMapper.INSTANCE;
 
     public PersonServiceImpl(PersonRepository repository) {
         this.repository = repository;
@@ -23,8 +26,10 @@ public class PersonServiceImpl implements PersonService {
      * preencher os dados.
      */
     @Override
-    public MessageResponseDTO createPerson(Person person) {
-        final var savedPerson = repository.save(person);
+    public MessageResponseDTO createPerson(PersonDTO personDTO) {
+        final var savedToSave = personMapper.toModel(personDTO);
+
+        final var savedPerson = this.repository.save(savedToSave);
 
         return MessageResponseDTO
                 .builder()
