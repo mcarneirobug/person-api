@@ -7,6 +7,9 @@ import com.matheus.personapi.repository.PersonRepository;
 import com.matheus.personapi.service.PersonService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class PersonServiceImpl implements PersonService {
 
@@ -37,4 +40,11 @@ public class PersonServiceImpl implements PersonService {
                 .build();
     }
 
+    @Override
+    public List<PersonDTO> listAll() {
+        return this.repository.findAll()
+                .stream()
+                .map(personMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }
